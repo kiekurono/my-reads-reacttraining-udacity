@@ -13,6 +13,9 @@ class SearchBooks extends React.Component {
     };
   }
 
+  /**
+  *Updating the seach results as they type in to the search field.
+  */
   updateSearch = (search)=>{
     BooksAPI.search(search,10).then((books)=>{
       if (!books.error) {
@@ -47,7 +50,7 @@ class SearchBooks extends React.Component {
                   </li>
                 ))
             ):(
-              <p>{this.state.search === ''? 'Type in the seach to find something amazing!': 'Sorry, no matches for \''+this.state.search+'\'...'}</p>
+              <p>{this.state.search === ''? "Type in the seach to find something amazing!": "Sorry, no matches for \'"+this.state.search+"\'..."}</p>
             )}
           </ol>
         </div>

@@ -12,12 +12,13 @@ class BooksApp extends React.Component {
     this.state = {
       wantToRead: [],
       currentlyReading: [],
-      read: [],
-      oldShelf: '',
-      newShelf: '',
+      read: []
     }
   }
 
+  /**
+  *Initalize the bookshelves
+  */
   componentDidMount() {
     BooksAPI.getAll().then((books) =>{
       this.setState({
@@ -29,6 +30,10 @@ class BooksApp extends React.Component {
 
   }
 
+  /**
+  *This moves the book from one shelf to another
+  *then it updates the bookshelves.
+  */
   moveBook(book,shelf) {
     BooksAPI.update(book,shelf);
     BooksAPI.getAll().then((books) =>{

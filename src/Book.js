@@ -15,6 +15,9 @@ class Book extends React.Component{
     moveBook: PropTypes.func.isRequired
   }
 
+/**
+*Initalize selector for shelf dropdown.
+*/
   componentDidMount() {
     this.setState({selector: this.props.book.shelf});
   }
@@ -35,7 +38,7 @@ class Book extends React.Component{
           </div>
         </div>
         <div className="book-title">{this.props.book.title}</div>
-        <div className="book-authors">{this.props.book.hasOwnProperty("authors")? (this.props.book.authors[0]):''}</div>
+        <div className="book-authors">{this.props.book.hasOwnProperty("authors")? (this.props.book.authors[0]):""}</div>
       </div>
     )
   }
