@@ -1,7 +1,9 @@
 import React from 'react'
+import PropTypes from 'prop-types'
+import {Link} from 'react-router-dom'
 import * as BooksAPI from './api/BooksAPI'
 import './App.css'
-import {Link} from 'react-router-dom'
+
 import Book from './Book.js'
 
 class SearchBooks extends React.Component {
@@ -13,20 +15,38 @@ class SearchBooks extends React.Component {
     };
   }
 
+  static propTypes = {
+    library: PropTypes.array.isRequired,
+    moveBook: PropTypes.func.isRequired
+  }
+
   /**
-  *Updating the seach results as they type in to the search field.
+  *Updates search and show the correct status fo rthe onese
+  *already in our library.
   */
   updateSearch = (search)=>{
-    BooksAPI.search(search,10).then((books)=>{
+    this.setState({search: search});
+
+    if (!search) {
+      this.setState({books:[]});
+      return;
+    }
+
+    BooksAPI.search(search,10).then((books) => {
       if (!books.error) {
-        this.setState({search: search, books: books});
+        let onShelf = this.props.library.filter((book)=>(books.findIndex((searchedBook)=>(searchedBook.id === book.id)) >= 0 && book.shelf !=='none'));
+        let notOnShelf = books.filter((book)=>(this.props.library.findIndex((libBook)=>(libBook.id === book.id)) < 0));
+
+        const listBooks = onShelf.concat(notOnShelf.map((book)=>{book.shelf='none'; return book;}));
+
+        this.setState({books: listBooks});
       }else{
-        this.setState({search: search, books:[]})
+        this.setState({books:[]});
       }
 
-    })
-
+    });
   }
+
 
   render() {
     return(
@@ -50,7 +70,7 @@ class SearchBooks extends React.Component {
                   </li>
                 ))
             ):(
-              <p>{this.state.search === ''? "Type in the seach to find something amazing!": "Sorry, no matches for \'"+this.state.search+"\'..."}</p>
+              <p>{this.state.search === ''? "Type in the seach to find something amazing!": "Sorry, no matches for '"+this.state.search+"'..."}</p>
             )}
           </ol>
         </div>
