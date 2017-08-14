@@ -2,17 +2,12 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import {Link} from 'react-router-dom'
 import * as BooksAPI from './api/BooksAPI'
-import './App.css'
-
 import Book from './Book.js'
 
 class SearchBooks extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      search: '',
-      books: [],
-    };
+  state = {
+    search: '',
+    books: [],
   }
 
   static propTypes = {
@@ -25,7 +20,7 @@ class SearchBooks extends React.Component {
   *already in our library.
   */
   updateSearch = (search)=>{
-    this.setState({search: search});
+    this.setState({search});
 
     if (!search) {
       this.setState({books:[]});

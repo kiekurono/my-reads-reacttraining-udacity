@@ -6,12 +6,8 @@ import SearchBooks from './SearchBooks.js'
 import './App.css'
 
 class BooksApp extends React.Component {
-  constructor(props){
-    super(props);
-    this.moveBook = this.moveBook.bind(this);
-    this.state = {
-      library: []
-    }
+  state = {
+    library: []
   }
 
   /**
@@ -29,29 +25,32 @@ class BooksApp extends React.Component {
   *This moves the book from one shelf to another
   *then it updates the bookshelves.
   */
-  moveBook(book,shelf) {
-    BooksAPI.update(book,shelf);
+  moveBook = (book,shelf) => {
+      BooksAPI.update(book,shelf);
 
-    if (book.shelf === 'none') {
-      if (shelf === 'none') {
+      if (book.shelf === 'none') {
+        if (shelf === 'none') {
+          return;
+        }
+        book.shelf = shelf;
+        const library = this.removeOldBooks(this.state.library.concat(book));
+        this.setState({library});
         return;
       }
-      book.shelf = shelf;
-      this.setState({
-        library: (this.state.library.concat(book)).filter((libBook) => (libBook.shelf !== 'none'))
-      });
-      return;
-    }
 
-    this.setState((prevState)=>{
-      library: prevState.library.map((libBook) => {
-        if (libBook.id === book.id) {
-          libBook.shelf = shelf;
-        }
-        return libBook;
-      }).filter((libBook) => (libBook.shelf !== 'none'))
-    });
-  };
+      this.setState((prevState)=>{
+        library: this.removeOldBooks(prevState.library.map((libBook) => {
+          if (libBook.id === book.id) {
+            libBook.shelf = shelf;
+          }
+          return libBook;
+        }));
+      });
+    };
+
+  removeOldBooks = (books) => {
+    return books.filter((book) => (book.shelf !== 'none'));
+  }
 
   render() {
     return (
